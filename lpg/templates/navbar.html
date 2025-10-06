@@ -1,0 +1,14 @@
+<!-- templates/navbar.html -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<nav class="navbar">
+    <ul>
+        <li><a href="{{ url_for('index') }}"><i class="fa-solid fa-home"></i><span>Home</span></a></li>
+        <li><a href="{{ url_for('dashboard') }}"><i class="fa-solid fa-dashboard"></i><span>Dashboard</span></a></li>
+        <li><a href="{{ url_for('my_documents') }}"><i class="fas fa-file-alt"></i><span>Documents</span></a></li>
+        <li><a href="{{ url_for('upload') }}"><i class="fas fa-upload"></i><span>Upload</span></a></li>
+        <li><a href="{{ url_for('verify_gap') }}"><i class="fas fa-search"></i><span>Gap Analysis</span></a></li>
+    </ul>
+    <ul class="bottom">
+        <li><a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a></li>
+    </ul>
+</nav>

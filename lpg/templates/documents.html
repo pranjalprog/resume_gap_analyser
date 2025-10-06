@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Documents</title>
+    <link href="{{ url_for('static', filename='styles/my_documents.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='styles/navbar.css') }}" rel="stylesheet">
+    
+</head>
+<body>
+    <header>
+        {% include 'navbar.html' %}
+    </header>
+    <div class="wrapper">
+        <h1>My Documents</h1>
+        {% if success %}
+        <div class="success-message">
+            <p>{{ success }}</p>
+        </div>
+        {% endif %}
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>View</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for doc in documents %}
+                        <tr>
+                            <td>{{ doc.name }}</td>
+                            <td>{{ doc.description }}</td>
+                            <td><a href="{{ doc.file_url }}" target="_blank">{{ doc.file_url }}</a></td>
+
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <a href="{{ url_for('upload') }}" class="upload-btn">Upload new document</a>
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins";
+}
+
+body {
+    margin: 0;
+    background: #dfe9f5;
+    display: flex;
+    /* justify-content: center; */
+    align-items: center;
+    height: 100vh;
+    color: #07001f;
+}
+
+.wrapper {
+    width: 500px;
+    padding: 2rem 1rem;
+    margin: 50px auto;
+    background-color: #fff;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 20px 35px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    font-size: 2rem;
+    color: #07001f;
+    margin-bottom: 1.2rem;
+}
+
+input,
+form textarea {
+    width: 100%;
+    outline: none;
+    border: 1px solid #fff;
+    padding: 12px 20px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    background: #e4e4e4;
+}
+
+form textarea {
+    height: 50vh;
+    resize: vertical;
+}
+
+button {
+    font-size: 1rem;
+    margin-top: 1.2rem;
+    padding: 10px 0;
+    border-radius: 20px;
+    outline: none;
+    border: none;
+    width: 30%;
+    color: #fff;
+    cursor: pointer;
+    background: rgba(17, 107, 143);
+}
+
+button:hover {
+    background: rgba(17, 107, 143, 0.8);
+}
+
+<<<<<<< HEAD
+
+button:hover{
+    background: rgba(17, 107, 143, 0.8);
+}
+
+
+
+/* Navigation Menu */
+
+h2{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 2rem;
+    box-shadow: 0 2px 16px hsla(230, 75%, 32%, .15);
+    color: #07001f;
+    margin-bottom: 1.2rem;  
+}
+.navbar ul{
+    list-style-type: none;
+    font-size: 1rem;
+    margin-top: 1.2rem;
+    padding: 10px 0;
+    border-radius: 20px;
+    outline: none;
+    border: none;
+    width: 100%;
+    color: #fff;
+    cursor: pointer;
+    background: rgba(17, 107, 143);
+    overflow: hidden;
+    box-shadow: 0 2px 16px hsla(230, 75%, 32%, .15);
+}
+.navbar a{
+    color: #fff;
+    text-decoration: none;
+    padding: 15px;
+    text-align: center;
+    display: block
+    
+}
+.navbar a:hover{
+    background: rgba(107, 179, 207, 0.8);
+}
+.navbar li{
+    float: left;
+}
+=======
+.body-wrapper
+{
+    transition: margin-left 0.3s;
+}
+
+header:hover ~ .body-wrapper {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+}
+>>>>>>> origin/khushal

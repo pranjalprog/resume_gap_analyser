@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "lpg-staging"
+version = "0.1.0"
+description = ""
+authors = ["Abhishek Kumar Singh <abhishek@netesenz.in>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+awscli = "^1.36.21"
+boto3 = "^1.35.80"
+psycopg2-binary = "^2.9.10"
+python-dotenv = "^1.0.1"
+flask = "^3.1.0"
+pyjwt = "^2.10.1"
+openai = "^1.57.4"
+pdfminer-six = "^20240706"
+flask-sqlalchemy = "^3.1.1"
+flask-migrate = "^4.0.7"
+reportlab = "^4.2.5"
+pinecone = "^7.3.0"
+pinecone-client = "^6.0.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

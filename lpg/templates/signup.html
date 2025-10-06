@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In</title>
+    <link href="{{url_for('static', filename = 'styles/signin.css')}}" rel = "stylesheet" />
+</head>
+<body>
+    <div class="wrapper">
+        <h1>Sign Up</h1>
+        <form method="POST" action="/signup">
+            <label>
+                <input type="text" name="username" placeholder="Username" required>
+            </label><br>
+            <label>
+                <input type="password" name="password" placeholder="Password" required>
+            </label><br>
+            <button type="submit">Sign up</button>
+        </form>
+    </div>
+    <h2>
+        <nav class="navbar">
+            <ul>
+                <li><a href ="{{ url_for('index') }}">Home</a></li>
+                <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                <li><a href="{{ url_for('my_documents') }}">Documents</a></li>
+                <li><a href="{{ url_for('upload') }}">Upload</a></li>
+                <li><a href="#">Profile</a></li>
+                <li><a href="{{ url_for('signin') }}">Sign In</a></li>
+            </ul>
+        </nav>
+    </h2>
+    
+</body>
+</html>

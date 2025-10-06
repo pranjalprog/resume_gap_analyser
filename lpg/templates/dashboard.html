@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="{{ url_for('static', filename='styles/dashboard.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <ul>
+                <li><a href="{{ url_for('index') }}"><i class="fa-solid fa-home"></i><span>Home</span></a></li>
+                <li><a href="{{ url_for('dashboard') }}"><i class="fa-solid fa-dashboard"></i><span>Dashboard</span></a></li>
+                <li><a href="{{ url_for('my_documents') }}"><i class="fas fa-file-alt"></i><span>Documents</span></a></li>
+                <li><a href="{{ url_for('upload') }}"><i class="fas fa-upload"></i><span>Upload</span></a></li>
+                <li><a href="{{ url_for('verify_gap') }}"><i class="fas fa-search"></i><span>Gap Analysis</span></a></li>
+            </ul>
+            <ul class="bottom">
+                <li><a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <aside class="document-list">
+            <h2>Document List</h2>
+            <div class="doc-list">
+                <ul>
+                    {% for doc in documents %}
+                    <li><a href="#" onclick="loadDocument('{{ doc.file_url }}', '{{ doc.name }}')">{{ doc.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </aside>
+        <section class="document">
+            <h2>Document</h2>
+            <iframe id="document-frame" src="{{ selected_document_url if selected_document_url else '' }}" width="100%" height="600px"></iframe>
+        </section>
+        <aside class="info">
+            <div class="info-box">
+                <h3>Word Count</h3>
+                <p id="word-count">{{ word_count }} words</p>
+            </div>
+            <div class="info-box">
+                <h3>Tags</h3>
+                <p id="tags">{{ tags }}</p>
+            </div>
+            <div class="info-box">
+                <h3>Sentiment</h3>
+                <p id="sentiment">{{ sentiment }}</p>
+            </div>
+            <div class="info-box">
+                <h3>Asset</h3>
+                <p id="asset">{{ asset }}</p>
+            </div>
+            <input type="hidden" id="selected_document" name="selected_document" value="{{ selected_document if selected_document else '' }}">
+            <button type="button" onclick="analyzeDocument()">Analyze Document</button>
+            <button type="button" onclick="generateSimilar()">Generate Similar</button>
+        </aside>
+    </main>
+    <script>
+        function loadDocument(url, doc_name) {
+            document.getElementById('document-frame').src = url;
+            document.getElementById('selected_document').value = doc_name;
+            analyzeDocument(); // Call analyzeDocument after loading a new document
+        }
+
+        function analyzeDocument() {
+            const docName = document.getElementById('selected_document').value;
+            if (!docName) {
+                alert("Please select a document first.");
+                return;
+            }
+
+            fetch("{{ url_for('dashboard') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ action: "analyze", document: docName })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Update the UI with the results
+                document.getElementById('word-count').textContent = `${data.word_count} words`;
+                console.debug("debug")
+                document.getElementById('tags').textContent = data.tags;
+                document.getElementById('sentiment').textContent = data.sentiment;
+                document.getElementById('asset').textContent = data.asset;
+            })
+            .catch(error => console.error("Error:", error));
+        }
+
+        function generateSimilar() {
+            const docName = document.getElementById('selected_document').value;
+            if (!docName) {
+                alert("Please select a document first.");
+                return;
+            }
+
+            fetch("{{ url_for('dashboard') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ action: "generate", document: docName })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert("Similar document generated successfully!");
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Gap</title>
+    <link href="{{url_for('static', filename = 'styles/verify_gap.css')}}" rel = "stylesheet" />
+    <link href="{{ url_for('static', filename='styles/navbar.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <header>
+        {% include 'navbar.html' %}
+    </header>
+    
+    <div class="container">
+        <h1><i class="fas fa-search"></i>Gap Analysis</h1>
+        <p class="description">Upload your resume and job description to analyze the gaps and get personalized recommendations.</p>
+        
+        <button class="upload-btn" type="button"><i class="fas fa-file-upload"></i> Select Documents</button>
+        
+        <!-- Modal for Document Selection -->
+        <div id="documentModal" class="modal">
+          <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            
+            <h2><i class="fas fa-list"></i> Select Documents for Analysis</h2>
+            <p class="modal-description">Choose your resume and the job description you want to compare against.</p>
+            
+            <form id="selectDocumentsForm" method="POST" action="{{ url_for('set_selected_document') }}">
+              <ul class="document-list">
+                {% for doc in documents %}
+                  <li class="document-list-item">
+                    <label>
+                      <input type="checkbox" name="document_ids" value="{{ doc.id }}"
+                        {% if selected_document_ids and doc.id|string in selected_document_ids %}checked{% endif %}>
+                      <span class="doc-name">{{ doc.name }}</span>
+                      <span class="doc-description">{{ doc.description }}</span>
+                    </label>
+                  </li>
+                {% endfor %}
+              </ul>
+              <button type="submit" class="select-doc-btn"><i class="fas fa-check"></i> Confirm Selection</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Show selected documents -->
+        {% if selected_documents %}
+          <div class="selected-document">
+            <h3><i class="fas fa-check-circle"></i> Selected Documents:</h3>
+            <ul>
+              {% for doc in selected_documents %}
+                <li><i class="fas fa-file-alt"></i> {{ doc.name }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+
+        <!-- Gap Analysis Form -->
+        <form method="POST" action="{{ url_for('analyze_gap') }}" class="gap-form">
+            <button class="analyze-btn" type="submit" {% if not selected_documents %}disabled{% endif %}>
+                <i class="fas fa-chart-line"></i> Analyze Gap
+            </button>
+        </form>
+
+        <!-- Gap Results Section -->
+        {% if gap_results %}
+        <div class="gap-results">
+            <h2><i class="fas fa-chart-bar"></i> Gap Analysis Report</h2>
+            <div class="results-content">
+                {% set ns = namespace(table=[], gaps_table=[], strengths=[], verdict=None, section=None) %}
+                {% for line in gap_results %}
+                    {# Robust section detection: match keywords regardless of emoji or formatting #}
+                    {% if 'Detailed Comparison' in line %}
+                        {% set ns.section = 'detailed' %}
+                    {% elif 'Strengths in Resume' in line %}
+                        {% set ns.section = 'strengths' %}
+                    {% elif 'Gaps or Improvements Needed' in line or 'Gaps & Recommendations' in line %}
+                        {% set ns.section = 'gaps' %}
+                    {% elif 'Final Verdict' in line %}
+                        {% set ns.section = 'verdict' %}
+                    {% elif line.startswith('|') and ns.section == 'detailed' %}
+                        {% set _ = ns.table.append(line) %}
+                    {% elif line.startswith('|') and ns.section == 'gaps' %}
+                        {% set _ = ns.gaps_table.append(line) %}
+                    {% elif line.startswith('- ') and ns.section == 'strengths' %}
+                        {% set _ = ns.strengths.append(line[2:]) %}
+                    {% elif ns.section == 'verdict' and line.strip() %}
+                        {% set ns.verdict = line %}
+                    {% endif %}
+                {% endfor %}
+
+                <!-- Detailed Comparison Table -->
+                {% if ns.table %}
+                <h3 class="section-header"><i class="fas fa-table"></i> Detailed Comparison</h3>
+                <div class="table-responsive">
+                <table class="gap-table">
+                    <thead>
+                        <tr>
+                        {% for col in ns.table[0].split('|')[1:-1] %}
+                            <th>{{ col.strip() }}</th>
+                        {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for row in ns.table[2:] %}
+                        <tr>
+                        {% for cell in row.split('|')[1:-1] %}
+                            <td>
+                                {% if '✔' in cell or '✅' in cell %}<span class="icon-check"><i class="fas fa-check-circle"></i></span>{% endif %}
+                                {% if '✖' in cell or '❌' in cell or 'Not mentioned' in cell or 'No mention' in cell %}<span class="icon-cross"><i class="fas fa-times-circle"></i></span>{% endif %}
+                                {{ cell|safe }}
+                            </td>
+                        {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                </div>
+                {% endif %}
+
+                <!-- Strengths Section -->
+                {% if ns.strengths %}
+                <h3 class="section-header"><i class="fas fa-check-circle"></i> Strengths in Resume</h3>
+                <ul class="strengths-list">
+                    {% for s in ns.strengths %}
+                    <li><span class="icon-check"><i class="fas fa-check-circle"></i></span> {{ s }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                <!-- Gaps & Recommendations Table -->
+                {% if ns.gaps_table %}
+                <h3 class="section-header"><i class="fas fa-times-circle"></i> Gaps & Recommendations</h3>
+                <div class="table-responsive">
+                <table class="gap-table gap-table-gaps">
+                    <thead>
+                        <tr>
+                        {% for col in ns.gaps_table[0].split('|')[1:-1] %}
+                            <th>{{ col.strip() }}</th>
+                        {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for row in ns.gaps_table[2:] %}
+                        <tr>
+                        {% for cell in row.split('|')[1:-1] %}
+                            <td>
+                                {% if loop.index0 == 0 %}<span class="icon-cross"><i class="fas fa-times-circle"></i></span>{% endif %}
+                                {{ cell|safe }}
+                            </td>
+                        {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                </div>
+                {% endif %}
+
+                <!-- Final Verdict Section -->
+                {% if ns.verdict %}
+                <h3 class="section-header"><i class="fas fa-clipboard-check"></i> Final Verdict</h3>
+                <div class="final-verdict">{{ ns.verdict|safe }}</div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- PDF Download Link - Always at the bottom -->
+        {% if s3_upload_error %}
+        <div class="error-message" style="color: #fff; background: #e74c3c; padding: 16px; border-radius: 8px; margin-bottom: 18px; text-align: center; font-weight: bold;">
+            <i class="fas fa-exclamation-triangle"></i> {{ s3_upload_error }}
+        </div>
+        {% endif %}
+        {% if pdf_s3_url %}
+        <div class="pdf-link">
+            <h3><i class="fas fa-file-pdf"></i> View Gap Analysis PDF:</h3>
+            <a href="{{ pdf_s3_url }}" target="_blank" class="pdf-download-btn">
+                View PDF Report
+            </a>
+        </div>
+        {% endif %}
+
+        <!-- Prepare Button -->
+        <form method="POST" action="#">
+            <button class="prepare-btn" type="button">
+                <i class="fas fa-cogs"></i> Prepare
+            </button>
+        </form>
+    </div>
+</body>
+
+<script>
+document.querySelector('.upload-btn').addEventListener('click', function(e) {
+    document.getElementById('documentModal').style.display = 'block';
+});
+
+document.getElementById('closeModal').onclick = function() {
+    document.getElementById('documentModal').style.display = 'none';
+};
+
+// Close modal when clicking outside of it
+window.onclick = function(event) {
+    var modal = document.getElementById('documentModal');
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+}
+</script>
+</html>

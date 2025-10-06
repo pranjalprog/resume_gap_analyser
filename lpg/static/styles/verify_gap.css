@@ -1,0 +1,465 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f8;
+    margin: 0;
+    padding: 0;
+    /* Override navbar flexbox layout for this page */
+    display: block;
+    height: auto;
+    min-height: 100vh;
+}
+
+/* Add margin to account for fixed navbar */
+.container {
+    max-width: 800px;
+    background-color: #fff;
+    margin: 50px auto;
+    /*margin-left: 100px; Account for navbar width */
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 10px;
+    color: #333;
+    font-size: 2.2em;
+}
+
+h1 i {
+    color: #007bff;
+    margin-right: 10px;
+}
+
+.description {
+    text-align: center;
+    color: #666;
+    margin-bottom: 30px;
+    font-size: 1.1em;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #444;
+}
+
+select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #fdfdfd;
+}
+
+.upload-btn, .analyze-btn {
+    display: inline-block;
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+}
+
+.upload-btn {
+    background-color: #007bff;
+}
+
+.upload-btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+.analyze-btn {
+    background-color: #28a745;
+}
+
+.analyze-btn:hover:not(:disabled) {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
+.analyze-btn:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.prepare-btn {
+    display: inline-block;
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+    background-color: rgb(76 120 138); 
+}
+
+.prepare-btn:hover:not(:disabled) {
+    background-color: rgba(17, 107, 143);
+    transform: translateY(-2px);
+}
+
+.prepare-btn:disabled {
+    background-color: #b8a9d6;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+    .container {
+        margin: 20px;
+        margin-left: 20px;
+        padding: 20px;
+    }
+}
+
+/* Modal Styles */
+.modal {
+    display: none; /* Hidden by default, shown by JS */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: #fff;
+    margin: 10% auto;
+    padding: 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.modal-content h2 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.modal-content h2 i {
+    color: #007bff;
+    margin-right: 8px;
+}
+
+.modal-description {
+    color: #666;
+    margin-bottom: 20px;
+    font-size: 0.95em;
+}
+
+.close {
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    font-size: 28px;
+    cursor: pointer;
+    color: #888;
+    transition: color 0.2s;
+}
+.close:hover {
+    color: #333;
+}
+
+.document-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.document-list-item {
+    margin-bottom: 15px;
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.document-list-item:hover {
+    border-color: #007bff;
+    background-color: #f8f9fa;
+}
+
+.document-list-item label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin: 0;
+}
+
+.document-list-item input[type="checkbox"] {
+    margin-right: 12px;
+    transform: scale(1.2);
+}
+
+.doc-name {
+    font-weight: 600;
+    color: #333;
+    margin-right: 10px;
+}
+
+.doc-description {
+    color: #666;
+    font-size: 0.9em;
+    font-style: italic;
+}
+
+.select-doc-btn {
+    margin-top: 20px;
+    padding: 12px 24px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.2s;
+    width: 100%;
+}
+.select-doc-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Selected Documents Section */
+.selected-document {
+    background-color: #e8f5e8;
+    border: 1px solid #28a745;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+
+.selected-document h3 {
+    color: #28a745;
+    margin-bottom: 15px;
+    font-size: 1.1em;
+}
+
+.selected-document h3 i {
+    margin-right: 8px;
+}
+
+.selected-document ul {
+    list-style: none;
+    padding: 0;
+}
+
+.selected-document li {
+    padding: 8px 0;
+    color: #333;
+    font-weight: 500;
+}
+
+.selected-document li i {
+    color: #28a745;
+    margin-right: 8px;
+}
+
+/* Gap Results Section */
+.gap-results {
+    margin-top: 30px;
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    padding: 25px;
+    border-left: 4px solid #007bff;
+}
+
+.gap-results h2 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 1.5em;
+}
+
+.gap-results h2 i {
+    color: #007bff;
+    margin-right: 10px;
+}
+
+.results-content {
+    line-height: 1.6;
+}
+
+/* Gap Analysis Table Styles */
+.gap-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 24px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 1em;
+}
+.gap-table th, .gap-table td {
+    border: 1px solid #e0e0e0;
+    padding: 12px 14px;
+    text-align: left;
+    vertical-align: top;
+}
+.gap-table th {
+    background: #f4f6fa;
+    font-weight: 600;
+    color: #333;
+}
+.gap-table tr:nth-child(even) {
+    background: #f9fbfd;
+}
+.gap-table tr:hover {
+    background: #f1f7ff;
+}
+.gap-table-gaps th, .gap-table-gaps td {
+    border-color: #ffd6d6;
+}
+
+.icon-check {
+    color: #28a745;
+    margin-right: 6px;
+    font-size: 1.1em;
+}
+.icon-cross {
+    color: #dc3545;
+    margin-right: 6px;
+    font-size: 1.1em;
+}
+.strengths-list {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 24px;
+}
+.strengths-list li {
+    margin-bottom: 10px;
+    font-size: 1em;
+    display: flex;
+    align-items: center;
+}
+.final-verdict {
+    /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
+    /* color: white; */
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+    /* font-weight: 600; */
+    /* text-align: center; */
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+/* PDF Download Link Styling */
+.pdf-link {
+    margin-top: 30px;
+    margin-bottom: 25px;
+    padding: 20px;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(240, 147, 251, 0.3);
+}
+
+.pdf-link h3 {
+    color: white;
+    margin-bottom: 15px;
+    font-size: 1.3em;
+}
+
+.pdf-link h3 i {
+    margin-right: 8px;
+}
+
+.pdf-download-btn {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.9);
+    color: #f5576c;
+    padding: 12px 25px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1em;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.pdf-download-btn:hover {
+    background: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+}
+
+.pdf-download-btn i {
+    margin-right: 8px;
+}
+
+.section-header {
+    color: #007bff;
+    font-size: 1.15em;
+    margin: 28px 0 14px 0;
+    padding-bottom: 7px;
+    border-bottom: 2px solid #e0e0e0;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+.section-header i {
+    margin-right: 8px;
+}
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
+/* Loading state */
+.loading {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+}
+
+.loading i {
+    animation: spin 1s linear infinite;
+    margin-right: 10px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
